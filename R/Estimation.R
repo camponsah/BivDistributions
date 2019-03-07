@@ -5,8 +5,8 @@ fit.BEG <- function(data,level=0.95) ## data has to be a vector (X,N)
 {
   N<-data[,2]
   X<-data[,1]
-  alpha<-(1-level)/2
-  z<-abs(qnorm(alpha))
+  qt<-(1-level)/2
+  z<-abs(qnorm(qt))
   b<-mean(X)/mean(N)
   p<-1/mean(N)
   lowerb<-b-z*sqrt(p*b^2/length(data[,1]))
