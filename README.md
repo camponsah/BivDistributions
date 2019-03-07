@@ -1,5 +1,5 @@
 # Bivariate distributions connected with the continuous mixture and discrete  marginals
-This work is concern on models with stochastic representation (X,N) where is N is a discrete distribution on positive integers and X is the random sums of N independent/dependent {Xi}s.  
+This work is concern with models with stochastic representation (X,N) where is N is a discrete distribution on positive integers and X is the random sums of N independent/dependent {Xi}s.  
 
 In the above contest, several models have been developed, which includes bivariate distribution with exponential and geometric marginals (BEG law) by Kozubowski and Panorska (2005), bivariate gamma-geometric law (BGG) by Barreto-Souza W. (2012), a bivariate distribution with Lomax and geometric margins (BLG) by Arendarczyk et al (2018), a bivariate distribution with gamma mixture and discrete pareto margin (GMDP) Amponsah et al.  etc.
 
