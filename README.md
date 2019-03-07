@@ -1,10 +1,16 @@
 # Bivariate distributions connected with the continuous mixture and discrete  marginals
-We implement various algorithms useful for BEG, BGG, GMDP, BLG  models. Testing for exponentiality versus Pareto distribution is also implemented. Others include random variable simulation, quantiles, and marginals.
+This work is concern on models with stochastic representation (X,N) where is N is a discrete distribution on positive integers and X is the random sums of N independent/ dependent {Xi}s.  
 
-Bivariate gamma-geometric law and its induced Lévy process (BGG model): https://www.sciencedirect.com/science/article/pii/S0378375804002162
+In the above contest, several models have been developed, which includes bivariate distribution with exponential and geometric marginals (BEG law) by Kozubowski and Panorska (2005), Bivariate gamma-geometric law (BGG) by Barreto-Souza W. (2012), A bivariate distribution with Lomax and geometric margins (BLG) by Arendarczyk et al (2018), A bivariate distribution with gamma mixture and discrete pareto margin (GMDP) Amponsah et al.  etc.
 
-A mixed bivariate distribution with exponential and geometric marginals (BEG model): https://www.sciencedirect.com/science/article/pii/S0047259X12000735
+We implement various algorithms useful for BEG, BGG, GMDP, BLG , etc.  models. Testing for exponentiality versus Pareto distribution is also implemented ( See Kozubowski et al, 2008). Others include random variable simulation, quantiles, marginals and others. The link to the various articles are listed below.
 
-A bivariate distribution with Lomax and geometric margins (BLG): https://www.sciencedirect.com/science/article/pii/S1226319218300371
+Bivariate gamma-geometric law and its induced Lévy process (BGG model): https://doi.org/10.1016/j.jspi.2004.04.010
 
-Testing Exponentiality versus Pareto distribution via likelihood ratio: https://www.tandfonline.com/doi/ref/10.1080/03610910802439121?scroll=top-- 
+A mixed bivariate distribution with exponential and geometric marginals (BEG model): https://doi.org/10.1016/j.jmva.2012.03.004
+
+A bivariate distribution with Lomax and geometric margins (BLG): https://doi.org/10.1016/j.jkss.2018.04.006
+
+Testing Exponentiality versus Pareto distribution via likelihood ratio: https://doi.org/10.1080/03610910802439121 
+
+Discrete Pareto distribution:  https://doi.org/10.1515/eqc-2014-0014
