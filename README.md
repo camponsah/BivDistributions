@@ -1,4 +1,4 @@
-# Bivariate-distributions-connected-with-continuos-variable-and-discrete-marginals
+# Bivariate distributions connected with continuos mixture and discrete  marginals
 We implement various algorithms useful for of BEG, BGG, GMDP, BLG  models. Testing for exponentiality versus Pareto distribution is also implemented. Others include random variable simulation, quantiles and marginals.
 
 Bivariate gamma-geometric law and its induced Lévy process (BGG model): https://www.sciencedirect.com/science/article/pii/S0378375804002162
