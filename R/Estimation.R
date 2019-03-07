@@ -52,7 +52,7 @@ fit.BGG <- function(data,alpha,level=0.95) ## data has to be a vector (X,N)
     j=1
     error=1
     S1=0
-    while(error>0.0001){ 
+    while(error>0.00001){ 
       S=S1+ p*j^2 *((1-p)^(j-1))* psigamma(j*a, deriv = 1)
       j=j+1
       error=S-S1
@@ -87,5 +87,6 @@ fit.BGG <- function(data,alpha,level=0.95) ## data has to be a vector (X,N)
 
 # Example
 #fit<-fit.BEG(Data.df,level = 0.9)
-fit<-fit.BGG(data = Data.df,alpha = 1, level = 0.99)
-fit$Estimates
+#fit$Estimates
+#fit<-fit.BGG(data = Data.df,alpha = 1, level = 0.99)
+#fit$Estimates
