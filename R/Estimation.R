@@ -30,8 +30,8 @@ fit.BGG <- function(data,alpha,level=0.95) ## data has to be a vector (X,N)
 {
   N<-data[,2]
   X<-data[,1]
-  alpha<-(1-level)/2
-  z<-abs(qnorm(alpha))
+  qt<-(1-level)/2
+  z<-abs(qnorm(qt))
   ### Log likelihood function
     log.lik <- function(par) { #par[1]=p and par[2]=delta
     #N<-data[,2]
@@ -65,15 +65,15 @@ fit.BGG <- function(data,alpha,level=0.95) ## data has to be a vector (X,N)
   sigmaab<--1/(p*b)
   sigmapp<-1/(p*p*(1-p))
  J= solve(matrix(c(sigmabb,sigmaab,0,sigmaab,sigmaaa,0,0,0,sigmapp),byrow = 3, ncol = 3))
- J<-Data.df(J)
+ J<-data.frame(J)
  colnames(J)<- c("alpha","beta","p")
  row.names(J)<- c("alpha","beta","p")
- lowera<-a-z*sqrt(J[2,2]/length(data[,1]))
-  lowerb<-b-z*sqrt(J[1,1]/length(data[,1]))
-  lowerp<-p-z*sqrt(J[3,3]/length(data[,1]))
-  uppera<-a+z*sqrt(J[2,2]/length(data[,1]))
-  upperb<-b+z*sqrt(J[1,1]/length(data[,1]))
-  upperp<-p-z*sqrt(J[3,3]/length(data[,1]))
+ lowera<-a-z*sqrt(J[2,2]/length(X))
+  lowerb<-b-z*sqrt(J[1,1]/length(X))
+  lowerp<-p-z*sqrt(J[3,3]/length(N))
+  uppera<-a+z*sqrt(J[2,2]/length(X))
+  upperb<-b+z*sqrt(J[1,1]/length(X))
+  upperp<-p-z*sqrt(J[3,3]/length(N))
   log.like<-b^(N*a)*(1/gamma(N*a))*(X^(N*a -1))*exp(-b*X)*p*(1-p)^(N-1)
   Deviance<- -2*sum(log(log.like))
   Output<-data.frame(matrix(c(a,b,p)),matrix(c(lowera,lowerb,lowerp)),matrix(c(uppera,upperb,upperp)))
@@ -87,5 +87,5 @@ fit.BGG <- function(data,alpha,level=0.95) ## data has to be a vector (X,N)
 
 # Example
 #fit<-fit.BEG(Data.df,level = 0.9)
-fit<-fit.BGG(data = Data.df,alpha = 1, level = 99)
+fit<-fit.BGG(data = Data.df,alpha = 1, level = 0.99)
 fit$Estimates
