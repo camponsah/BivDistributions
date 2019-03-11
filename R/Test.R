@@ -29,4 +29,5 @@ ep.test <- function(data,sigma1=1,level=0.95) ## data has to be a vector (X,N)
   return(result)
 }
 
-ep.test(Data.df$X)
+ep.test(rexp(1000))
+

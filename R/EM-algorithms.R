@@ -1,51 +1,71 @@
-#' library(distr)
+rm(list = ls())
+#' 
+##### Simulate discrete pareto random variable
+rdpareto<-function(n,delta,p){
+   u<-runif(n)
+  sigma=-1/(delta*log(1-p))
+  return(ceiling(sigma*((1-u)^(-delta) -1)))
+}
 
 
-
-DP.EM <- function(N,delta, p, K)
+#' Algorithmn
+EM.dpareto <- function(data,delta, p, maxiter=1000, tol=1e-10)
 {
   # initialization
+  N<-data
   n <- length(N)
-  gamma1=-1/(delta*log(1-p))
-  Z<-rgamma(n,shape = 1/delta, rate = gamma1)
-  Deviance <- -2*sum(log((1-exp(-Z))*exp(-Z*N)))
-  Output <- matrix(NA,K+1,4)
-  Output[1,] <- c(0,delta, p, Deviance)
-  
-  for (k in 1:K) {
+  sigma=-1/(delta*log(1-p))
+  ##Likelihood function of Discrete Pareto
+  like<-function(N,sigma, delta){
+    LL<- (1/(1+((N-1)/sigma)))^(1/delta)-(1/(1+((N)/sigma)))^(1/delta)
+    return(LL)
+  }
+  ### function to optimize for delta
+  func_delta<-function(delta){
+    sig<- -1/(delta*mean(C1)) 
+    ll<- (n/delta)*log(sig) - n*lgamma(1/delta) - sum((sig-1+N)*C1) +((1/delta)-1)*sum(C2)
+    return(-sum(log(ll)))
+  }
+  Devianceold<-0
+  Deviancenew <- sum(log(like(N,sigma = sigma,delta = delta)))
+  Outi<-NULL;outd<-NULL;outp<-NULL;outD<-NULL; k=1 
+  Outi[1]<-0; outd[1]<-delta; outp[1]<-p; outD<-Deviancenew
+  ### log-like function
+  #Derivative<-function(delta1){
+  #  log(1/delta1)-digamma(1/delta1)-log(mean(C1))+mean(C2)
+  #}
+  while(abs(Deviancenew-Devianceold)>tol && k <= maxiter){ 
     ### E step
-    a<- 1/(1+((N-1)/gamma1))
-    b<- 1/(1+(N/gamma1))
+    a<- 1/(1+((N-1)/sigma))
+    b<- 1/(1+(N/sigma))
     P<-a^(1/delta)-b^(1/delta)
-    C1<- (1/(delta*P))*(gamma1^(1/delta))* ((gamma1+N-1)^(-(1/delta +1))-(gamma1+N)^(-(1/delta +1)))
-    t1<- digamma(1/delta)-log(gamma1+N-1)
-    t2<- digamma(1/delta)-log(gamma1+N)
-    C2<- (1/P)*(gamma1^(1/delta))* (t1*((gamma1+N-1)^(-1/delta))-t2*((gamma1+N)^(-1/delta)))
+    C1<- (1/(delta*P))*(sigma^(1/delta))* ((sigma+N-1)^(-(1/delta +1))-(sigma+N)^(-(1/delta +1)))
+    t1<- digamma(1/delta)-log(sigma+N-1)
+    t2<- digamma(1/delta)-log(sigma+N)
+    C2<- (1/P)*(sigma^(1/delta))* (t1*((sigma+N-1)^(-1/delta))-t2*((sigma+N)^(-1/delta)))
     
     #### M step
-    oldgamma1<- gamma1
-    gamma1<- 1/(delta*mean(C1))
-    delta<- 1/distr:: igamma(log(gamma1)+mean(C2))
-    
-    Deviance <- -2*sum(log((1-exp(-Z))*exp(-Z*N)))
-    p<-1- exp(-1/(gamma1*delta))
+    delta<- as.numeric(nlm(func_delta, p=delta)$estimate)# newtonRaphson(Derivative, delta)$root 
+    sigma<- 1/(delta*mean(C1))
+    p<-1- exp(-1/(sigma*delta))
+    Devianceold<-Deviancenew
+    Deviancenew <- sum(log(like(N,sigma = sigma,delta = delta)))
     # Output
-    Output[k+1,] <- c(k, delta, p, Deviance)
-    Z<-rgamma(n,shape = 1/delta, rate = gamma1)
+    k=k+1
+    Outi[k]<-k; outd[k]<-delta; outp[1]<-p; outD<-Deviancenew
   }
-  Output <- data.frame(Output)
-  names(Output) <- c("iteration","delta","p","Deviance")
-  result <- list(par=c(delta,p), Deviance=Deviance, data=Output)
+  Output <- data.frame(Outi,outd,outp,outD)
+  names(Output) <- c("iteration","delta","p","log-lik values")
+  result <- list(par=c(delta,p), Deviance=Deviancenew, data=Output)
   return(result)
 }
 
-p=0.1; delta=0.2; K=100
-n<-1000
-u<-runif(n)
-gamma1=-1/(delta*log(1-p))
-N<- ceiling(gamma1*((1-u)^(-delta) -1))
-fit <- DP.EM(N,0.5,0.5, K)
+
+N<-rdpareto(10,delta = 0.5,p=0.3)
+fit <- EM.dpareto(N,delta = 0.5, p=0.5)
 fit$par
+tail(fit$data)
+
 
 
 
