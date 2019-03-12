@@ -63,7 +63,8 @@ EM.dpareto <- function(data,delta, p, maxiter=2000, tol=1e-16)
 
 
 N<-rdpareto(100,delta = 2,p=0.6)
-fit <- EM.dpareto(N,delta = 5, p=0.5)
+
+fit <- EM.dpareto(N,delta = 1, p=0.5)
 fit$par
 tail(fit$data)
 
