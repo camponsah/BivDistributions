@@ -9,7 +9,7 @@ rdpareto<-function(n,delta,p){
 
 
 #' Algorithmn
-EM.dpareto <- function(data,delta, p, maxiter=1000, tol=1e-10)
+EM.dpareto <- function(data,delta, p, maxiter=2000, tol=1e-16)
 {
   # initialization
   N<-data
@@ -31,9 +31,10 @@ EM.dpareto <- function(data,delta, p, maxiter=1000, tol=1e-10)
   Outi<-NULL;outd<-NULL;outp<-NULL;outD<-NULL; k=1 
   Outi[1]<-0; outd[1]<-delta; outp[1]<-p; outD<-Deviancenew
   ### log-like function
-  #Derivative<-function(delta1){
-  #  log(1/delta1)-digamma(1/delta1)-log(mean(C1))+mean(C2)
-  #}
+  Derivative<-function(delta){
+    dd<-log(1/delta)-digamma(1/delta)-log(mean(C1))+mean(C2)
+    dd
+  }
   while(abs(Deviancenew-Devianceold)>tol && k <= maxiter){ 
     ### E step
     a<- 1/(1+((N-1)/sigma))
@@ -45,7 +46,7 @@ EM.dpareto <- function(data,delta, p, maxiter=1000, tol=1e-10)
     C2<- (1/P)*(sigma^(1/delta))* (t1*((sigma+N-1)^(-1/delta))-t2*((sigma+N)^(-1/delta)))
     
     #### M step
-    delta<- as.numeric(nlm(func_delta, p=delta)$estimate)# newtonRaphson(Derivative, delta)$root 
+    delta<- newtonRaphson(Derivative, delta)$root #nlm(func_delta, p=delta)$estimate#  
     sigma<- 1/(delta*mean(C1))
     p<-1- exp(-1/(sigma*delta))
     Devianceold<-Deviancenew
@@ -61,8 +62,8 @@ EM.dpareto <- function(data,delta, p, maxiter=1000, tol=1e-10)
 }
 
 
-N<-rdpareto(10,delta = 0.5,p=0.3)
-fit <- EM.dpareto(N,delta = 0.5, p=0.5)
+N<-rdpareto(100,delta = 2,p=0.6)
+fit <- EM.dpareto(N,delta = 5, p=0.5)
 fit$par
 tail(fit$data)
 
