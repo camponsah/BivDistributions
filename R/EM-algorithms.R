@@ -1,15 +1,15 @@
-rm(list = ls())
 #' 
+#'
 ##### Simulate discrete pareto random variable
 rdpareto<-function(n,delta,p){
-   u<-runif(n)
+  u<-runif(n)
   sigma=-1/(delta*log(1-p))
   return(ceiling(sigma*((1-u)^(-delta) -1)))
 }
 
 
 #' Algorithmn
-EM.dpareto <- function(data,delta, p, maxiter=2000, tol=1e-16)
+EM.dpareto <- function(data,delta, p, maxiter=100, tol=1e-6)
 {
   # initialization
   N<-data
@@ -24,11 +24,11 @@ EM.dpareto <- function(data,delta, p, maxiter=2000, tol=1e-16)
   func_delta<-function(omega){ # omega=1/delta
     #sig<- n/(delta*sum(C1)) 
     ll<- n*omega*log(omega/mean(C1)) -n*lgamma(omega)-sum((omega/mean(C1)+N-1)*C1)+(omega-1)*sum(C2)
-      #(n/delta)*log(sig) - n*lgamma(1/delta) - sum((sig-1+N)*C1) +((1/delta)-1)*sum(C2)
+    #(n/delta)*log(sig) - n*lgamma(1/delta) - sum((sig-1+N)*C1) +((1/delta)-1)*sum(C2)
     return(-ll)
   }
   Devianceold<-0
-  Deviancenew <- sum(log(like(N,sigma = sigma,delta = delta)))
+  Deviancenew <- sum(log(like(N,sigma = sigma,delta = delta)+tol)) 
   Outi<-NULL;outd<-NULL;outp<-NULL;outD<-NULL; k=1 
   Outi[1]<-0; outd[1]<-delta; outp[1]<-p; outD<-Deviancenew
   ### log-like function
@@ -51,7 +51,7 @@ EM.dpareto <- function(data,delta, p, maxiter=2000, tol=1e-16)
     sigma<- 1/(delta*mean(C1))
     p<-1- exp(-1/(sigma*delta))
     Devianceold<-Deviancenew
-    Deviancenew <- sum(log(like(N,sigma = sigma,delta = delta)))
+    Deviancenew <- sum(log(like(N,sigma = sigma,delta = delta)+tol))
     # Output
     k=k+1
     Outi[k]<-k; outd[k]<-delta; outp[1]<-p; outD<-Deviancenew
@@ -61,14 +61,7 @@ EM.dpareto <- function(data,delta, p, maxiter=2000, tol=1e-16)
   result <- list(par=c(delta,p), Deviance=Deviancenew, data=Output)
   return(result)
 }
-
-
-N<-rdpareto(100,delta = 0.1,p=0.6)
-
-fit <- EM.dpareto(N,delta = 1, p=0.5)
+N<- rdpareto(1,delta = 1,p=0.1)
+fit <- EM.dpareto(N,delta = 0.5, p=0.5)
 fit$par
 tail(fit$data)
-
-
-
-
