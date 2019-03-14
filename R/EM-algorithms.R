@@ -21,10 +21,11 @@ EM.dpareto <- function(data,delta, p, maxiter=2000, tol=1e-16)
     return(LL)
   }
   ### function to optimize for delta
-  func_delta<-function(delta){
-    sig<- -1/(delta*mean(C1)) 
-    ll<- (n/delta)*log(sig) - n*lgamma(1/delta) - sum((sig-1+N)*C1) +((1/delta)-1)*sum(C2)
-    return(-sum(log(ll)))
+  func_delta<-function(omega){ # omega=1/delta
+    #sig<- n/(delta*sum(C1)) 
+    ll<- n*omega*log(omega/mean(C1)) -n*lgamma(omega)-sum((omega/mean(C1)+N-1)*C1)+(omega-1)*sum(C2)
+      #(n/delta)*log(sig) - n*lgamma(1/delta) - sum((sig-1+N)*C1) +((1/delta)-1)*sum(C2)
+    return(-ll)
   }
   Devianceold<-0
   Deviancenew <- sum(log(like(N,sigma = sigma,delta = delta)))
@@ -46,7 +47,7 @@ EM.dpareto <- function(data,delta, p, maxiter=2000, tol=1e-16)
     C2<- (1/P)*(sigma^(1/delta))* (t1*((sigma+N-1)^(-1/delta))-t2*((sigma+N)^(-1/delta)))
     
     #### M step
-    delta<- newtonRaphson(Derivative, delta)$root #nlm(func_delta, p=delta)$estimate#  
+    delta<- 1/nlm(func_delta, p=1/delta)$estimate# newtonRaphson(Derivative, delta)$root # 
     sigma<- 1/(delta*mean(C1))
     p<-1- exp(-1/(sigma*delta))
     Devianceold<-Deviancenew
@@ -62,7 +63,7 @@ EM.dpareto <- function(data,delta, p, maxiter=2000, tol=1e-16)
 }
 
 
-N<-rdpareto(100,delta = 2,p=0.6)
+N<-rdpareto(100,delta = 0.1,p=0.6)
 
 fit <- EM.dpareto(N,delta = 1, p=0.5)
 fit$par
