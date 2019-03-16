@@ -1,15 +1,6 @@
 #' 
-#'
-##### Simulate discrete pareto random variable
-rdpareto<-function(n,delta,p){
-  u<-runif(n)
-  sigma=-1/(delta*log(1-p))
-  return(ceiling(sigma*((1-u)^(-delta) -1)))
-}
-
-
 #' Algorithmn
-EM.dpareto <- function(data,delta, p, maxiter=100, tol=1e-6)
+EM.dpareto <- function(data,delta, p, maxiter=400, tol=1e-12)
 {
   # initialization
   N<-data
@@ -22,9 +13,7 @@ EM.dpareto <- function(data,delta, p, maxiter=100, tol=1e-6)
   }
   ### function to optimize for delta
   func_delta<-function(omega){ # omega=1/delta
-    #sig<- n/(delta*sum(C1)) 
     ll<- n*omega*log(omega/mean(C1)) -n*lgamma(omega)-sum((omega/mean(C1)+N-1)*C1)+(omega-1)*sum(C2)
-    #(n/delta)*log(sig) - n*lgamma(1/delta) - sum((sig-1+N)*C1) +((1/delta)-1)*sum(C2)
     return(-ll)
   }
   Devianceold<-0
@@ -61,7 +50,7 @@ EM.dpareto <- function(data,delta, p, maxiter=100, tol=1e-6)
   result <- list(par=c(delta,p), Deviance=Deviancenew, data=Output)
   return(result)
 }
-N<- rdpareto(1,delta = 1,p=0.1)
+N<- rdpareto(50,delta = 1,p=0.5)
 fit <- EM.dpareto(N,delta = 0.5, p=0.5)
 fit$par
-tail(fit$data)
+
