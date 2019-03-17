@@ -57,7 +57,7 @@ fit.BLG <- function(data,alpha=NULL,beta=NULL,level=0.95, tol=1e-8) ## data has 
 }  
 
 
-Data.df<-rblg(100,alpha = 1,beta = 100,p=0.4)
-fit2<-fit.BLG(data = Data.df,alpha = 2,beta = 10, level = 0.95)
-fit2$Estimates
+Data.df<-rblg(1000,alpha = 1,beta = 100,p=0.4)
+fit<-fit.BLG(data = Data.df,alpha = 2,beta = 10, level = 0.95)
+fit$Estimates
 
