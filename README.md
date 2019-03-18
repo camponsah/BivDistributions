@@ -5,9 +5,11 @@ In the above contest, several models have been developed, which includes bivaria
 
 We implement various algorithms useful for BEG, BGG, GMDP, BLG, etc.  models estimation. Testing for exponentiality versus Pareto distribution is also implemented ( See Kozubowski et al, 2008). Others include random variable simulation, quantiles, marginals, and others. The link to the various articles is listed below.
 
+A mixed bivariate distribution with exponential and geometric marginals (BEG ): https://doi.org/10.1016/j.jspi.2004.04.010 
+
 Bivariate gamma-geometric law and its induced Lévy process (BGG ): https://doi.org/10.1016/j.jmva.2012.03.004
 
-A mixed bivariate distribution with exponential and geometric marginals (BEG ): https://doi.org/10.1016/j.jspi.2004.04.010 
+Bivariate gamma mixture discrete Pareto distribution(GMDP): https://scholarworks.unr.edu/bitstream/handle/11714/2065/Amponsah_unr_0139M_12378.pdf?sequence=1&isAllowed=y 
 
 A bivariate distribution with Lomax and geometric margins (BLG): https://doi.org/10.1016/j.jkss.2018.04.006
 
