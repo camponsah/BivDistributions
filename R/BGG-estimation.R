@@ -15,7 +15,7 @@ fit.BGG <- function(data,level=0.95) ## data has to be a vector (X,N)
     return(-ll)
   }
   ## Estimate alpha
-  alpha<-mean(X)/mean(N)
+  alpha<- mean(N*((mean(X))^2)/var(X))
  a<- nlm(log.lik,p=alpha)$estimate #optim(par =alpha, fn=log.lik)
   #a<-para$par #estimate for alpha
   b<-a*mean(N)/mean(X) ## estimate beta
@@ -58,6 +58,6 @@ fit.BGG <- function(data,level=0.95) ## data has to be a vector (X,N)
 }  
 
 #Example
-Data.df<-rbgg(1000,10,2,0.45)
+Data.df<-rbgammageo(n=100,alpha=1,beta=2,0.45)
 fit<-fit.BGG(data = Data.df)
 fit

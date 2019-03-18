@@ -29,6 +29,6 @@ fit.BEG <- function(data,level=0.95) ## data has to be a vector (X,N)
 
 
 # Example
-Data.df<-rbeg(n=1000,beta = 10,p=0.45) 
+Data.df<-rbexpgeo(n=100,beta = 10,p=0.45) 
 fit<-fit.BEG(Data.df,level = 0.95)
 fit

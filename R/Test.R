@@ -1,6 +1,6 @@
 #' method=c(Gnedenk, Bryson, Kozubowski)
 #### Estimation of BEG parameters
-ep.test <- function(data,sigma1=1,method="Gnedenk",level=0.95) ## data has to be a vector (X,N)
+ep.test <- function(data,sigma1=1,method="Gnedenk",level=0.95,tol=1e-12) ## data has to be a vector (X,N)
 {
   X<-data
   n=length(X)
@@ -22,34 +22,29 @@ ep.test <- function(data,sigma1=1,method="Gnedenk",level=0.95) ## data has to be
   }
   ##2
   else if (method=="Kozubowski"){
-   Q<-function(sigma1){
-    ll<- 1+log(sigma1)+log(mean(log(1+X/sigma1))) +mean(log(1+X/sigma1))
-    -ll
-  }
-  sig<-as.numeric(nlm(Q, p=sigma1)$estimate)
-  if((n==1)|| (sig==Inf)){
-   Sn<-mean(X) 
-   Wn<-0
-  }else {
+   log.like<-function(par){ #par[1]=omega , par[2]=s
+    ll<- 1+log(par+ tol ) + log(mean(log(1+X/par))+tol) + mean(log(1+X/par))
+    return(-ll)
+   }
+   sig<- nlm(p=mean(X),f=log.like)$estimate
+  ######################################
+  ######################################
   Sn<- sig*mean(log(1+X/sig))
-  Wn<-Sn/sig
-  }
-  log.lik<- - n*(log(Sn)+(1+1/Wn)*mean(log(1+Wn*X/Sn)))
-  #Deviance<- -2*sum(log.lik)
-  L0<- (exp(1)*mean(X))^(-n)
-  L1<-exp(log.lik)
-  test<- -2*log(L0/L1)
-  p_value<-pchisq(test,df=2, lower.tail = FALSE)
+  Wn<-mean(log(1+X/sig))
+  L0<- -n*(1+log(mean(X)))
+  L1<- -n*(log(Sn+tol) +(1+(1/Wn))*mean(log(1+Wn*X/Sn)))
+  test<- -2*(L0+L1)
+  p_value<-0.5*pchisq(test,df=1, lower.tail = FALSE)
   }
   ###Output
   Output<-data.frame(test,p_value)
-  colnames(Output)<-c("F statistic","p-value")
+  colnames(Output)<-c("Test statistic","p-value")
   result <- Output
   return(result)
 }
 
 library(EnvStats)
 #X<-rpareto(100, location=1, shape = 20)
-X<-rexp(3, rate = 10)
+X<-rexp(300, rate = 1)
 ep.test(X, method = "Gnedenk")
 ep.test(X, method = "Kozubowski")
