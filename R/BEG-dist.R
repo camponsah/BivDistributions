@@ -40,3 +40,6 @@ pbexpgeo<- function(q,beta,p, lower.tail=TRUE,log.p=FALSE){
   }
 }
 
+
+Data.df<-rbexpgeo(10, beta = 100, p=0.1)
+pbexpgeo(Data.df, beta = 100, p=0.1)

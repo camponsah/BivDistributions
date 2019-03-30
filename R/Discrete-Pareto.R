@@ -11,7 +11,7 @@ rdispareto<-function(n,delta,p){
 
 
 
-# N is vector quantiles representing discrete pareto random variable
+# N is vector observations discrete pareto distribution
 ddispareto<-function(N,delta,p,log.p=FALSE){
  W1<- (1-delta*(N-1)*log(1-p))^(-1/delta)
  W2<- (1-delta*N*log(1-p))^(-1/delta)
@@ -25,7 +25,7 @@ ddispareto<-function(N,delta,p,log.p=FALSE){
  }
 }
 
-# q is vector quantiles representing discrete pareto random variable
+# q is vector quantiles discrete pareto distribution
 pdispareto<-function(q,delta,p,lower.tail=TRUE,log.p=FALSE){
   sigma=-1/(delta*log(1-p))
 M<- 1- ((1+q/sigma)^(-1/delta))
@@ -54,4 +54,4 @@ qdispareto<-function(prob,delta,p){
 
 #Examples
 rdpareto(n=10,delta = 0.1,p=0.5)
-qdispareto(c(0.1,0.5,0.9), delta = 0.1,p=0.5)
+qdispareto(seq(0.1,0.9,0.1), delta = 2,p=0.1)

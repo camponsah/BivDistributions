@@ -9,15 +9,15 @@ rbgammageo<- function(n,alpha,beta,p){
   return(data.frame(X,N))
 }
 
-# data is bivariate vector  (X,N) vector representing observations from BEG model
+# data is bivariate vector  (X,N) vector representing observations from bivariate gamma mixture and geometric model
 dbgammageo<- function(data,alpha,beta,p){
   N<-data[,2]
   X<-data[,1]
-  M<-((1-p)^(N-1))*(p*beta^(alpha*N))*(X^(alpha*N-1))*exp(-beta*X)[3]
+  M<-((1-p)^(N-1))*(p*beta^(alpha*N))*(X^(alpha*N-1))*exp(-beta*X)/gamma(alpha*N)
   return(M)
 }
 
-# q is bivariate vector  (X,N) vector quantiles from BEG model
+# q is bivariate vector  (X,N) vector quantiles from bivariate gamma mixture and geometric model
 pbgammageo<- function(q,alpha,beta,p, lower.tail=TRUE,log.p=FALSE){
   N<-q[,2]
   X<-q[,1]
@@ -48,3 +48,5 @@ pbgammageo<- function(q,alpha,beta,p, lower.tail=TRUE,log.p=FALSE){
   }
 }
 
+Data.df<-rbgammageo(10, alpha = 2, beta = 100, p=0.1)
+pbgammageo(Data.df,alpha = 2, beta = 100, p=0.1)

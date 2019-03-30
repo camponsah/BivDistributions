@@ -43,8 +43,36 @@ ep.test <- function(data,sigma1=1,method="Gnedenk",level=0.95,tol=1e-12) ## data
   return(result)
 }
 
-library(EnvStats)
-#X<-rpareto(100, location=1, shape = 20)
-X<-rexp(300, rate = 1)
-ep.test(X, method = "Gnedenk")
-ep.test(X, method = "Kozubowski")
+
+exppareto.test <- function(X,level=0.95,tol=1e-12) ## data has to be a vector (X,N)
+{
+  n=length(X)
+  #qt<-(1-level)
+  log.like<-function(par){ #par[1]=omega , par[2]=s
+      ll<- 1+log(par+ tol ) + log(mean(log(1+X/par))+tol) + mean(log(1+X/par))
+      return(-ll)
+  }
+      t<-(2*(mean(X)^2 -mean(X^2)^2))/(2*mean(X)^2-mean(X^2))
+      it<-(t-1)*mean(X)
+    sig<- nlm(p=it,f=log.like)$estimate
+    ######################################
+    ######################################
+    Sn<- sig*mean(log(1+X/sig))
+    Wn<-Sn/sig
+    L0<- -n*(1+log(mean(X)))
+    L1<- -n*(log(Sn+tol) +(1+(1/Wn))*mean(log(1+Wn*X/Sn)))
+    test<- -2*(L0-L1)
+    p_value<-0.5*pchisq(test,df=1, lower.tail = FALSE)
+  ###Output
+  Output<-data.frame(test,p_value)
+  colnames(Output)<-c("Test statistic","p-value")
+  result <- Output
+  return(result)
+}
+
+
+X<-rlomax(100,scale = 0.200,shape = 0.5)
+#X<-rexp(300, rate = 1/10)
+exppareto.test(X)
+
+
