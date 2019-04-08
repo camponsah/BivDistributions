@@ -1,5 +1,5 @@
 #### Estimation of BEG parameters
-fit.BEG <- function(data,level=0.95) ## data has to be a vector (X,N)
+beg_fit <- function(data,level=0.95) ## data has to be a vector (X,N)
 {
   N<-data[,2]
   X<-data[,1]
@@ -25,8 +25,7 @@ fit.BEG <- function(data,level=0.95) ## data has to be a vector (X,N)
   return(result)
 }  
 
-
 # Example
 Data.df<-rbexpgeo(n=100,beta = 10,p=0.45) 
-fit<-fit.BEG(Data.df,level = 0.95)
+fit<-beg_fit(Data.df,level = 0.95)
 fit

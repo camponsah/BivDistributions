@@ -1,7 +1,5 @@
 
-
 #### Estimation of BLG parameters
-
 blg_fit <- function(data,alpha=NULL,beta=NULL,level=0.95, tol=1e-8) ## data has to be a vector (X,N)
 {
   if (is.null(alpha)| is.null(beta)){
