@@ -5,11 +5,11 @@ EM.dpareto <- function(data,delta, p, maxiter=400, tol=1e-12)
   # initialization
   N<-data
   n <- length(N)
-  sigma=-1/(delta*log(1-p))
+  gamma1=-1/(delta*log(1-p))
   ##Likelihood function of Discrete Pareto
-  like<-function(N,sigma, delta){
-    LL<- (1/(1+((N-1)/sigma)))^(1/delta)-(1/(1+((N)/sigma)))^(1/delta)
-    return(LL)
+  like<-function(N,gamma1, delta){
+    LL<- (1/(1+((N-1)/gamma1)))^(1/delta)-(1/(1+((N)/gamma1)))^(1/delta)
+    return(sum(log(LL)))
   }
   ### function to optimize for delta
   func_delta<-function(omega){ # omega=1/delta
@@ -17,7 +17,7 @@ EM.dpareto <- function(data,delta, p, maxiter=400, tol=1e-12)
     return(-ll)
   }
   Devianceold<-0
-  Deviancenew <- sum(log(like(N,sigma = sigma,delta = delta)+tol)) 
+  Deviancenew <- sum(log(like(N,gamma1 = gamma1,delta = delta)+tol)) 
   Outi<-NULL;outd<-NULL;outp<-NULL;outD<-NULL; k=1 
   Outi[1]<-0; outd[1]<-delta; outp[1]<-p; outD<-Deviancenew
   ### log-like function
@@ -27,20 +27,20 @@ EM.dpareto <- function(data,delta, p, maxiter=400, tol=1e-12)
   }
   while(abs(Deviancenew-Devianceold)>tol && k <= maxiter){ 
     ### E step
-    a<- 1/(1+((N-1)/sigma))
-    b<- 1/(1+(N/sigma))
+    a<- 1/(1+((N-1)/gamma1))
+    b<- 1/(1+(N/gamma1))
     P<-a^(1/delta)-b^(1/delta)
-    C1<- (1/(delta*P))*(sigma^(1/delta))* ((sigma+N-1)^(-(1/delta +1))-(sigma+N)^(-(1/delta +1)))
-    t1<- digamma(1/delta)-log(sigma+N-1)
-    t2<- digamma(1/delta)-log(sigma+N)
-    C2<- (1/P)*(sigma^(1/delta))* (t1*((sigma+N-1)^(-1/delta))-t2*((sigma+N)^(-1/delta)))
+    C1<- (1/(delta*P))*(gamma1^(1/delta))* ((gamma1+N-1)^(-(1/delta +1))-(gamma1+N)^(-(1/delta +1)))
+    t1<- digamma(1/delta)-log(gamma1+N-1)
+    t2<- digamma(1/delta)-log(gamma1+N)
+    C2<- (1/P)*(gamma1^(1/delta))* (t1*((gamma1+N-1)^(-1/delta))-t2*((gamma1+N)^(-1/delta)))
     
     #### M step
     delta<- 1/nlm(func_delta, p=1/delta)$estimate# newtonRaphson(Derivative, delta)$root # 
-    sigma<- 1/(delta*mean(C1))
-    p<-1- exp(-1/(sigma*delta))
+    gamma1<- 1/(delta*mean(C1))
+    p<-1- exp(-1/(gamma1*delta))
     Devianceold<-Deviancenew
-    Deviancenew <- sum(log(like(N,sigma = sigma,delta = delta)+tol))
+    Deviancenew <- sum(log(like(N,gamma1 = gamma1,delta = delta)+tol))
     # Output
     k=k+1
     Outi[k]<-k; outd[k]<-delta; outp[1]<-p; outD<-Deviancenew
