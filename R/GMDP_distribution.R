@@ -1,5 +1,5 @@
-##### Simulate bivariate gamma mixture and discrete Pareto random variables
 
+##### Simulate bivariate gamma mixture and discrete Pareto random variables
 # n is number of observations
 rgammamixdispareto<- function(n,alpha,beta,delta,p){
   u<-runif(n)
