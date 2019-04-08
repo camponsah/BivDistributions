@@ -53,5 +53,5 @@ qdpareto<-function(prob,delta,p){
 }
 
 #Examples
-rdpareto(n=10,delta = 0.1,p=0.5)
+rdpareto(n=100,delta = 0.1,p=0.5)
 qdpareto(seq(0.1,0.9,0.1), delta = 2,p=0.1)
