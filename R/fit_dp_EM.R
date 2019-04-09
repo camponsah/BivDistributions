@@ -24,7 +24,7 @@ dpareto_em <- function(data,delta, p, maxiter=100, tol=1e-12)
   Outi<-NULL;outd<-NULL;outp<-NULL;outD<-NULL; k=1 
   Outi[1]<-0; outd[1]<-delta; outp[1]<-p; outD[1]<-Deviancenew
   ##
-  while((abs(Deviancenew-Devianceold)>tol) | (k <= maxiter)){ 
+  while((abs(Deviancenew-Devianceold)>tol) & (k <= maxiter)){ 
     ### E step
     const<- 1/(gamma(eta)*((gamma1+N-1)^(-eta) - (gamma1+N)^(-eta)))
     a<- const * gamma(eta+1) * ((gamma1+N-1)^(-(eta+1)) - (gamma1+N)^(-(eta+1)))
