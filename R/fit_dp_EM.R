@@ -1,9 +1,8 @@
 #' 
 #' Algorithmn
-dpareto_em <- function(data,delta, p, maxiter=100, tol=1e-12)
+dpareto_em <- function(data,delta=1, p=0.5, maxiter=100, tol=1e-12)
 {
-  require(pracma)
-  # initialization
+   # initialization
   N<-data
   n <- length(N)
   gamma1<- -1/(delta*log(1-p))
@@ -47,6 +46,8 @@ dpareto_em <- function(data,delta, p, maxiter=100, tol=1e-12)
   result <- list(par=c(delta,p), Deviance=Deviancenew, data=Output)
   return(result)
 }
+
+#Example
 N<- rdpareto(100,delta = 1,p=0.5)
 fit <- dpareto_em(N,delta = 2, p=0.5, maxiter = 1000)
 fit$par
