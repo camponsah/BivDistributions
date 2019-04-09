@@ -34,7 +34,7 @@ dpareto_em <- function(data,delta, p, maxiter=100, tol=1e-12)
     #### M step
     eta<- stats:: nlm(f=func_eta,p=eta)$estimate
     delta<- 1/eta
-    p<-exp(-mean(a))
+    p<-1-exp(-mean(a))
     gamma1<- - 1/(delta*log(1-p))
     Devianceold<-Deviancenew
     Deviancenew <- log_like(N,gamma1,eta)
