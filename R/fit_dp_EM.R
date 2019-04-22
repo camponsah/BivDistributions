@@ -1,6 +1,6 @@
 
 
-dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-12){
+dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
   N<- data
   n <- length(N)
   gamma_1<- - 1/(delta*log(1 - p))
@@ -13,7 +13,7 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-12){
   # Function to optimize to eta
   func_eta<-function(eta){
     ll<- eta*log(eta + tol) - lgamma(eta)- eta - eta*log(mean(a) + tol) + eta*mean(c)
-    return( - ll)
+    return( -ll)
   }
   # log-liklihood calcultion
   Devianceold<- 0
@@ -29,7 +29,13 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-12){
     t2<- digamma(eta) - log(gamma_1 + N)
     c<-  const*gamma(eta) * (t1*(gamma_1 + N - 1)^(-eta) - t2*(gamma_1 + N)^(-eta))
     #### M step
-    eta<- stats:: nlm(f=func_eta,p=eta)$estimate
+    constant<-mean(c)-log(mean(a))
+    if(constant<0){
+    eta <-stats:: nlm(f=func_eta,p=eta, ndigit = 12)$estimate
+    }
+    else{
+      eta <- Inf
+      }
     delta<- 1/eta
     p<- 1 - exp( - mean(a))
     gamma_1<- - 1/(delta*log(1 - p))
@@ -47,7 +53,7 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-12){
 }
 
 #Example
-N<- rdpareto(100,delta = 1,p=0.5)
-fit <- dpareto_em(N,delta = 2, p=0.5, maxiter = 1000)
+N<- rdpareto(100,delta =0.15 ,p=0.5)
+fit <- dpareto_em(N, maxiter = 1000)
 fit$par
 
