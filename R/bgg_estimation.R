@@ -11,13 +11,19 @@ bgg_fit <- function(data,level=0.95) ## data has to be a vector (X,N)
   log.lik <- function(par) { #par[1]=alpha, par[2]=beta
     #b=par*mean(N)/mean(X)
     B<-par*mean(N)/mean(X)
-    ll<- par*mean(N)*log(B)-B*mean(X)+mean(par*N*log(X)-lgamma(par*N))
+    ll<- par*mean(N)*log(B+1e-16)-B*mean(X)+mean(par*N*log(X)-lgamma(par*N))
     return(-ll)
   }
   ## Estimate alpha
   alpha<- mean(N*((mean(X))^2)/var(X))
- a<- nlm(log.lik,p=alpha)$estimate #optim(par =alpha, fn=log.lik)
-  #a<-para$par #estimate for alpha
+  constant<- log(mean(N)/Mean(X)) + mean(N*log(X/N))/mean(N)
+  if (constant<0){
+    a<- nlm(log.lik,p=alpha)$estimate
+  }
+  else{
+    a<- Inf
+    message("MLE of alpha does not exist!")
+  }
   b<-a*mean(N)/mean(X) ## estimate beta
   p<-1/mean(N) # estimate p
   ### Sum to infinity function
@@ -25,7 +31,7 @@ bgg_fit <- function(data,level=0.95) ## data has to be a vector (X,N)
     j=1
     error=1
     S1=0
-    while(error>0.00001){ 
+    while(error>0.00001){
       S=S1+ p*j*j *((1-p)^(j-1))* psigamma(j*a, deriv = 1)
       j=j+1
       error=abs(S-S1)
@@ -55,7 +61,7 @@ bgg_fit <- function(data,level=0.95) ## data has to be a vector (X,N)
   row.names(Output)<- c("alpha","beta","p")
   result <- list(Estimates=Output,Deviance=Deviance, Inverse.Fisher.Matrix=J)
   return(result)
-}  
+}
 
 #Example
 Data.df<-rbgammageo(n=100,alpha=1,beta=2,0.45)

@@ -1,6 +1,6 @@
 
 
-dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
+dpareto_em <- function(data, delta = 0.1, p = 0.5, maxiter = 500, tol = 1e-16){
   N<- data
   n <- length(N)
   gamma_1<- - 1/(delta*log(1 - p))
@@ -9,7 +9,7 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
   log_like<- function(N, delta, p){
    W1<- (1 - delta*(N - 1)*log(1 - p))^( - 1/delta)
    W2<- (1 - delta*N*log(1 - p))^( - 1/delta)
-    return(sum(log(W1 - W2)))
+    return(sum(log(W1 - W2)+tol))
   }
   # Function to optimize to eta
   func_eta<-function(eta){
@@ -55,6 +55,7 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
 
 #Example
 N<- rdpareto(10,delta =0.9 ,p=0.5)
+
 fit <- dpareto_em(N, maxiter = 1000)
 fit$par
 
