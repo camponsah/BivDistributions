@@ -6,9 +6,10 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
   gamma_1<- - 1/(delta*log(1 - p))
   eta<- 1/delta
   # log-likelihood for discrete Pareto
-  log_like<- function(N, gamma_1, eta){
-  LL<- (1/(1 + ((N - 1)/gamma_1)))^(eta) - (1/(1 + (N/gamma_1)))^(eta)
-    return(sum(log(LL)))
+  log_like<- function(N, delta, p){
+   W1<- (1 - delta*(N - 1)*log(1 - p))^( - 1/delta)
+   W2<- (1 - delta*N*log(1 - p))^( - 1/delta)
+    return(sum(log(W1 - W2)))
   }
   # Function to optimize to eta
   func_eta<-function(eta){
@@ -17,7 +18,7 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
   }
   # log-liklihood calcultion
   Devianceold<- 0
-  Deviancenew <- log_like(N, gamma_1, eta)
+  Deviancenew <- log_like(N, delta, p)
   # Intitialize vectors for storing data
   Outi<- NULL; outd<- NULL; outp<-NULL; outD<- NULL; k = 1
   Outi[1]<- 0; outd[1]<- delta; outp[1]<- p; outD[1]<- Deviancenew
@@ -40,7 +41,7 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
     p<- 1 - exp( - mean(a))
     gamma_1<- - 1/(delta*log(1 - p))
     Devianceold<-Deviancenew
-    Deviancenew <- log_like(N,gamma_1,eta)
+    Deviancenew <- log_like(N, delta, p)
     # Output
     k<- k + 1
     Outi[k]<- k; outd[k]<- delta; outp[k]<- p; outD[k]<- Deviancenew
@@ -53,7 +54,7 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
 }
 
 #Example
-N<- rdpareto(100,delta =0.15 ,p=0.5)
+N<- rdpareto(10,delta =0.9 ,p=0.5)
 fit <- dpareto_em(N, maxiter = 1000)
 fit$par
 
