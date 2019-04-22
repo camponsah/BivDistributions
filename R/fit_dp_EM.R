@@ -49,7 +49,9 @@ dpareto_em <- function(data, delta = 0.1, p = 0.5, maxiter = 500, tol = 1e-16){
   #Output data
   Output <- data.frame(Outi,outd,outp,outD)
   names(Output) <- c("iteration","delta","p","log-lik values")
-  result <- list(par=c(delta,p), Deviance=Deviancenew, data=Output)
+  par<-data.frame(t(c(delta,p)))
+  colnames(par)<-c("delta","p")
+  result <- list(par=par, Deviance=Deviancenew, data=Output)
   return(result)
 }
 
